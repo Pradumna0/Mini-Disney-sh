@@ -1,0 +1,17 @@
+replicaCount: 3
+
+web:
+  repository: pradumna0/mini-web:31 # 50-WORKING -REMOVE ENV FROM DOCKERFILE    53- Also working   54-working   56-lastworking
+
+redis:
+  repository: pradumna0/mini-redis:35  #51- Work with password but not work without pass  53 - without password will work
+                                          #35 -> with .sh file
+
+service:
+  type: LoadBalancer
+  port: 8000
+  targetPort: 8000
+
+redisService:
+  port: 6379
+  targetPort: 6379

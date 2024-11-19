@@ -1,0 +1,21 @@
+# Dockerfile for Task Manager API
+FROM python:3.9-slim                     
+                                 #Base image to be used for the docker container
+WORKDIR /app     
+                    #Working Directory ->All command will run on this directory, here our code file will be uploaded.
+COPY requirements.txt requirements.txt      
+                                    #Copy all the dependencies for run this application into the container.
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .    
+              # Copy all the current  directory file into the /app directory into the container.
+              
+# ENV REDIS_PASSWORD=${REDIS_PASSWORD}
+EXPOSE 8000    
+                # The container will listen on port 8000 at runtime. It allow network traffic to reach the application running inside the container on port 8000.
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:app"]      
+                                                         #Default command to be executed when the container start.
+#deploying web application(web server)  # Module ->object on app.py
+
+# CMD ["gunicorn", "-c", "gunicorn_config.py", "app:app"]

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-web
+spec:
+  replicas: {{ .Values.replicaCount }}   #3
+  selector:
+    matchLabels:
+      app: mini-web
+  template:                   # the pod template that is used to create the pods created by this deployment
+    metadata:
+      labels:
+        app: mini-web
+    spec:
+      containers:
+      - name: mini-web
+        image: {{ .Values.web.repository }} 
+        # image: pradumna0/mini-web:50 #15    
+        env:
+        - name: REDIS_HOST
+          value: "redis"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          # value: "1234567"
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: REDIS_PASSWORD
+        
+---
+apiVersion: v1
+kind: Service     # network traffic 
+metadata:
+  name: web-service
+spec:
+  ports:
+  - name: http                     #the name of port.
+    # port: 8000                     #external port 
+    # targetPort: 8000               #internal port(app inside the pod)
+    port: {{ .Values.service.port }}                     
+    targetPort: {{ .Values.service.targetPort }}  
+  selector:
+    app: mini-web
+  # type: LoadBalancer  
+  type: {{ .Values.service.type }} 
+

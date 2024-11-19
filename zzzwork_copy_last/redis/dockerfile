@@ -1,0 +1,21 @@
+# Dockerfile for Redis with custom configuration
+FROM redis:latest
+
+# Set the working directory for instructions in the Dockerfile
+WORKDIR /etc/redis
+
+# Copy custom Redis configuration file and entrypoint script
+COPY redis.conf .
+COPY entrypoint.sh /entrypoint.sh
+
+# Make the entrypoint script executable
+RUN chmod +x /entrypoint.sh
+
+# Expose the Redis port
+EXPOSE 6379
+
+# Set the entrypoint to the script that will handle Redis startup
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Command to run Redis with the provided configuration
+CMD ["redis-server", "/etc/redis/redis.conf"]
